@@ -1,118 +1,138 @@
-import Image from 'next/image'
-import { Inter } from 'next/font/google'
+import { Inter } from "next/font/google";
+import { trpc } from "@/utils/trpc";
+import { useState } from "react";
+import Spinner from "@/components/Spinner";
+import { MdOutlineContentCopy, MdCode } from "react-icons/md";
+import { CopyToClipboard } from "react-copy-to-clipboard";
+import Highlighter from "@/components/Highlighter";
+const inter = Inter({ subsets: ["latin"] });
+const initialTest = `Regular expressions, or regex, are a sequence of characters that define a search pattern. They are used to matching patterns in text data and are supported by many programming languages. Regular expressions can match single or multiple characters using quantifiers, groups of characters using character classes, and special characters called meta-characters. They can also capture groups of text data and replace text data using the "replace" function.
 
-const inter = Inter({ subsets: ['latin'] })
+Regular expressions can be difficult to master, but they are an essential tool for text processing tasks. They can be used for tasks such as data cleaning, text mining, and natural language processing. Resources for learning regular expressions include online tutorials, books, and forums. With practice and patience, anyone can learn to use regular expressions to their full potential.`;
 
 export default function Home() {
-  return (
-    <main
-      className={`flex min-h-screen flex-col items-center justify-between p-24 ${inter.className}`}
-    >
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">pages/index.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
+	const [testText, setTestText] = useState<string>(initialTest);
+	const [testRegex, setTestRegex] = useState<string>("");
 
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700/10 after:dark:from-sky-900 after:dark:via-[#0141ff]/40 before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
+	const translateToRegex = trpc.translateToRegex.useMutation();
+	const [natural, setNatual] = useState<string>("");
 
-      <div className="mb-32 grid text-center lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
+	const [isCopied, setIsCopied] = useState<boolean>(false);
 
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
+	const handleGenerate = () => {
+		translateToRegex.mutate(natural);
+	};
 
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Discover and deploy boilerplate example Next.js&nbsp;projects.
-          </p>
-        </a>
+	const handleTest = () => {
+		if (!translateToRegex.data) return;
 
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
+		setTestRegex(translateToRegex.data);
+	};
+
+	const handleCopy = () => {
+		setIsCopied(true);
+
+		setTimeout(() => {
+			setIsCopied(false);
+		}, 1500);
+	};
+
+	return (
+		<main
+			className={`flex min-h-screen flex-col items-center p-4 sm:p-14 lg:p-24 w-full  ${inter.className}`}
+		>
+			<div className="h-full w-full md:w-3/4  space-y-5">
+				<div className="w-full p-2 flex justify-between items-center">
+					<div className="flex flex-col space-y-1">
+						<p className="font-bold text-xl">Regex Translate</p>
+						<p className="font-bold text-md text-gray-600">
+							Natural Languaje to Regex
+						</p>
+					</div>
+					<a
+						href="https://gabrielvalles.vercel.app"
+						rel="noopener"
+						target="_blank"
+						className="rounded-xl py-2 px-4 border bg-zinc-800/40 border-zinc-800 text-lg"
+					>
+						<MdCode />
+					</a>
+				</div>
+				<div className="flex flex-row flex-wrap lg:flex-nowrap space-y-5 lg:space-y-0 lg:space-x-5">
+					<div className="w-full lg:w-auto lg:grow flex flex-col bg-zinc-800/30 p-6 rounded-xl space-y-4">
+						<p className="font-bold">Natural Language</p>
+						<textarea
+							value={natural}
+							onChange={(e) => setNatual(e.target.value)}
+							placeholder="e.g Match email address"
+							className="resize-none h-32 w-full bg-zinc-800/40 border-neutral-800 border rounded-xl py-3 px-2 text-sm outline-0"
+						/>
+						<button
+							onClick={handleGenerate}
+							className="bg-blue-600 rounded-xl p-2"
+						>
+							Generate Regex
+						</button>
+					</div>
+
+					<div className="w-full lg:w-auto lg:grow flex flex-col bg-zinc-800/30 p-6 rounded-xl space-y-4">
+						<div className="flex flex-row space-x-2 items-center">
+							<p className="font-bold">Regex</p>
+							{translateToRegex.isLoading ? (
+								<Spinner className="h-5" />
+							) : null}
+						</div>
+
+						<textarea
+							value={translateToRegex.data}
+							readOnly
+							placeholder="e.g Match email address"
+							className="grow resize-none h-32 w-full bg-zinc-800/40 border-neutral-800 border rounded-xl py-3 px-2 text-sm outline-0 text-green-600/70"
+						/>
+
+						<div className="flex flex-row space-x-2 items-center">
+							<CopyToClipboard
+								text={translateToRegex.data ?? ""}
+								onCopy={handleCopy}
+							>
+								<button
+									disabled={!translateToRegex.data}
+									className={`h-full rounded-xl py-2 px-4 border ${
+										isCopied
+											? "bg-green-700"
+											: "bg-zinc-800/40"
+									} border-zinc-800 text-lg disabled:text-gray-500`}
+								>
+									<MdOutlineContentCopy />
+								</button>
+							</CopyToClipboard>
+
+							<button
+								onClick={handleTest}
+								className="h-full rounded-xl py-2 px-4 border bg-zinc-800/40 border-zinc-800 text-sm"
+							>
+								Test
+							</button>
+						</div>
+					</div>
+				</div>
+
+				<div className="grow flex flex-col bg-zinc-800/30 p-6 rounded-xl space-y-4">
+					<p className="font-bold">Test Regex</p>
+					<input
+						value={testRegex}
+						onChange={(e) => setTestRegex(e.target.value)}
+						placeholder="Write or generate a regex"
+						type="text"
+						className="text-green-600/70 w-full bg-zinc-800/40 border-neutral-800 border rounded-xl py-3 px-2 text-sm outline-0"
+					/>
+					<Highlighter
+						pattern={testRegex}
+						value={testText}
+						onChange={(value) => setTestText(value)}
+					/>
+				</div>
+			</div>
+		</main>
+	);
 }
