@@ -3,6 +3,7 @@ import { trpc } from "@/utils/trpc";
 import { useState } from "react";
 import Spinner from "@/components/Spinner";
 import { MdOutlineContentCopy, MdCode } from "react-icons/md";
+import { FaGithub } from "react-icons/fa";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import Highlighter from "@/components/Highlighter";
 const inter = Inter({ subsets: ["latin"] });
@@ -49,14 +50,27 @@ export default function Home() {
 							Natural Languaje to Regex
 						</p>
 					</div>
-					<a
-						href="https://gabrielvalles.vercel.app"
-						rel="noopener"
-						target="_blank"
-						className="rounded-xl py-2 px-4 border bg-zinc-800/40 border-zinc-800 text-lg"
-					>
-						<MdCode />
-					</a>
+					<div className="flex space-x-2">
+						<a
+							role="button"
+							href="https://gabrielvalles.vercel.app"
+							rel="noopener"
+							target="_blank"
+							className="rounded-xl py-2 px-4 border bg-zinc-800/40 border-zinc-800 text-lg"
+						>
+							<MdCode />
+						</a>
+
+						<a
+							role="button"
+							href="https://github.com/Gabo-div/regex-translator"
+							rel="noopener"
+							target="_blank"
+							className="rounded-xl py-2 px-4 border bg-zinc-800/40 border-zinc-800 text-lg"
+						>
+							<FaGithub />
+						</a>
+					</div>
 				</div>
 				<div className="flex flex-row flex-wrap lg:flex-nowrap space-y-5 lg:space-y-0 lg:space-x-5">
 					<div className="w-full lg:w-auto lg:grow flex flex-col bg-zinc-800/30 p-6 rounded-xl space-y-4">
